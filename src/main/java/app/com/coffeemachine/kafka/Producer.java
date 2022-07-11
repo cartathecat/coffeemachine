@@ -86,11 +86,6 @@ public class Producer {
 			log.error("Unable to send message - error: " + e.getMessage());
 		}
 		*/
-		
-		
-		
-		
-		
 	}
 
 	private ProducerRecord<String, String> createRecord(String msg) {

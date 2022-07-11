@@ -39,6 +39,7 @@ public class MyProducerFactory {
 	}
 	
 	
+	/*
 	@Bean
 	public AdminClient admin() {
 		log.info("Admin  Bean...");
@@ -56,8 +57,8 @@ public class MyProducerFactory {
 		AdminClient c = AdminClient.create(props);
 		return c;
 	}
-	
-	
+	*/
+
 	@Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
@@ -91,10 +92,7 @@ public class MyProducerFactory {
 		
 		//props.put("delivery.timeout.ms",30000); 
 		//props.put("metadata.max.idle.ms", 10000);
-		
-		// H2SGSSOYRCUYIR6Z
-		// Sm7MkbMRi2Z6tvBVHx2K1ji/2ns1GCbOQOLZlVOHgnAqnELrob+pzezILuHP3yZL
-		
+
 		return props;
 	}
 	

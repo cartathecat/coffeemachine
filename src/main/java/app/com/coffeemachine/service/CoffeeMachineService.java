@@ -38,8 +38,8 @@ public class CoffeeMachineService {
 
 	private final static Logger log = LoggerFactory.getLogger(CoffeeMachineService.class);
 	
-	@Autowired
-	private AdminClient admin;
+	//@Autowired
+	//private AdminClient admin;
 	
 	@Autowired
 	private BrevilleBaristaExpress coffeeMachine;
@@ -69,19 +69,19 @@ public class CoffeeMachineService {
 		coffeeMachine.PowerOnOff();
 		coffeeMachine.setStopCoffeeGrinding(true);
 		
-		boolean topicExist = doesTopicExist(topicName);
+	//	boolean topicExist = doesTopicExist(topicName);
 		//if (!topicExist) {
 		//	log.info("Topic '{}' does not exist, unable to send to kafka", topicName);
 		//} else {		
 			String msg = "{status:" + coffeeMachine.getPowerStatus().toString() + "}";
 			log.info("STATUS : " + msg);
-			producer.sendToKafka(topicName, msg);
+		//	producer.sendToKafka(topicName, msg);
 		//}
 	}
 	
 	
 	// Check if topic exists
-	
+	/*
 	private boolean doesTopicExist(String topicName) {		
 		ListTopicsResult topics = admin.listTopics();
 		//List<String> topic = new ArrayList<String>(Arrays.asList(topicName));
@@ -124,12 +124,12 @@ public class CoffeeMachineService {
 			e.printStackTrace();
 		}
 		*/
-		if (topicDescription == null) {
-			return false;
-		}
-		return true;
-	}
-	
+		//if (topicDescription == null) {
+		//	return false;
+		//}
+		//return true;
+	//}
+
 	
 	/*
 	 * Return the power status of a coffee machine
