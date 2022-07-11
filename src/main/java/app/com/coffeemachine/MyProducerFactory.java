@@ -3,6 +3,7 @@ package app.com.coffeemachine;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
@@ -11,6 +12,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
@@ -30,7 +32,14 @@ public class MyProducerFactory {
 	public MyProducerFactory() {
 		log.info("ProducerFactory ...");
 	}
-	
+
+	// Env values
+	private String KAFKA_USER;
+	private String KAFKA_PASS;
+
+	@Value("${spring.kafka.properties.sasl.jaas.config}")
+	private String JAAS_CONFIG;
+
 	@Bean("kafkaproducer")
 	public ProducerFactory<String,String> producerFactory() {
 		log.info("KafkaProducer ...");
@@ -87,7 +96,15 @@ public class MyProducerFactory {
 		//props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 		//props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 		props.put("sasl.mechanism", "PLAIN");
-		props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule   required username='H2SGSSOYRCUYIR6Z'   password='Sm7MkbMRi2Z6tvBVHx2K1ji/2ns1GCbOQOLZlVOHgnAqnELrob+pzezILuHP3yZL';");
+
+		// Replace the properties with env values
+		this.JAAS_CONFIG.replace("KAFKA_USER", System.getenv("KAFKA_USER"));
+		this.JAAS_CONFIG.replace("KAFKA_PASS", System.getenv("KAFKA_PASS"));
+
+		System.out.print("JAAS_CONFIG : " + this.JAAS_CONFIG);
+		//props.put("sasl.jaas.config", "org.apache.kafka.common.security.plain.PlainLoginModule required username='H2SGSSOYRCUYIR6Z'   password='Sm7MkbMRi2Z6tvBVHx2K1ji/2ns1GCbOQOLZlVOHgnAqnELrob+pzezILuHP3yZL';");
+		props.put("sasl.jaas.config", this.JAAS_CONFIG);
+
 		props.put("security.protocol", "SASL_SSL");
 		
 		//props.put("delivery.timeout.ms",30000); 

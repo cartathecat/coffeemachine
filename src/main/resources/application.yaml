@@ -6,7 +6,7 @@ spring:
           sasl:
               mechanism: PLAIN
               jaas:
-                  config: org.apache.kafka.common.security.plain.PlainLoginModule required username='1234' password='xxxxxx';               
+                  config: org.apache.kafka.common.security.plain.PlainLoginModule required username='${KAFKA_USER}' password='${KAFKA_PASS}';
           bootstrap:
               servers: localhost:9092
           security:

@@ -64,7 +64,7 @@ public class CoffeeMachineService {
 	
 	public void PowerButton() {
 		log.info("PowerButton");
-		String topicName = "onoffstatus1";
+		String topicName = "onoffstatus";
 		
 		coffeeMachine.PowerOnOff();
 		coffeeMachine.setStopCoffeeGrinding(true);
@@ -75,7 +75,7 @@ public class CoffeeMachineService {
 		//} else {		
 			String msg = "{status:" + coffeeMachine.getPowerStatus().toString() + "}";
 			log.info("STATUS : " + msg);
-		//	producer.sendToKafka(topicName, msg);
+			producer.sendToKafka(topicName, msg);
 		//}
 	}
 	
