@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: CoffeeMachine
+  kafka:
+      properties:
+          sasl:
+              mechanism: PLAIN
+              jaas:
+                  config: org.apache.kafka.common.security.plain.PlainLoginModule required username='1234' password='xxxxxx';               
+          bootstrap:
+              servers: localhost:9092
+          security:
+              protocol: SASL_SSL        
+logging:
+  level:
+    org:
+      springframework: OFF
+coffeemachine:
+   objects:
+      watertank: watertank.json
+info:
+  app:
+    name: ${spring.application.name}
+    description: Coffee Machine API
+    version: '@project.version@'
+    encoding: '@project.build.sourceEncoding@'
+    java:
+      version: '@java.version@'
+server:
+  port: 8092
+  error:
+    include-message: ALWAYS
