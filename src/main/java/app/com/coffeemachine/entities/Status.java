@@ -1,4 +1,4 @@
-package app.com.coffeemachine.models;
+package app.com.coffeemachine.entities;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

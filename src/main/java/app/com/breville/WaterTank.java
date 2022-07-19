@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import javax.annotation.Resource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,9 @@ import org.springframework.core.io.ClassPathResource;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@Slf4j
 public class WaterTank implements IWaterTank {
 
-	private final static Logger log = LoggerFactory.getLogger(WaterTank.class);
-	
-	// m/l
 	@JsonProperty("capacity")
 	private int CAPACITY = 2000;
 	@JsonProperty("waterLevel")

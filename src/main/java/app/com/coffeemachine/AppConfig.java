@@ -6,17 +6,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.kafka.core.KafkaTemplate;
 
-import app.com.basic.BasicCoffeeMachine;
 import app.com.breville.BrevilleBaristaExpress;
 import app.com.breville.DoseWheel;
 import app.com.breville.Hopper;
 import app.com.breville.GrindWheel;
 import app.com.breville.WaterTank;
-import app.com.coffeemachine.entities.CoffeeMachineStatus;
+import app.com.coffeemachine.models.grindresponse.CoffeeMachineStatus;
 import app.com.coffeemachine.kafka.Producer;
-import app.com.coffeemachine.service.CoffeeMachineService;
 import app.com.coffeemachine.storge.ObjectSerialDeSerial;
-import app.com.coffeemachine.*;
 
 @Configuration
 public class AppConfig {

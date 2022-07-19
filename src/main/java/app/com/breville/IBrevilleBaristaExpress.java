@@ -1,6 +1,6 @@
 package app.com.breville;
 
-import app.com.coffeemachine.entities.GrindResponse;
+import app.com.coffeemachine.models.grindresponse.GrindResponse;
 
 public interface IBrevilleBaristaExpress {
 

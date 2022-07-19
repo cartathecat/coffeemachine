@@ -3,15 +3,14 @@ package app.com.breville;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.beans.factory.annotation.Autowired;
 
-//@EntityScan
+@Slf4j
 public class Hopper implements IHopper {
-
-	private final static Logger log = LoggerFactory.getLogger(Hopper.class);
 
 	@Autowired
 	private GrindWheel grindWheel;

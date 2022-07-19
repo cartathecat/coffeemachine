@@ -2,12 +2,9 @@ package app.com.basic;
 
 //import app.com.basic.PowerStatus.POWERSTATUS;
 
-public interface IBasicCoffeeMachine {
+public interface IBasicCoffeeMachineWater {
 
-	public void PowerOnOff();
-	public PowerStatus getPowerStatus();
-	
-	public void DispenseHotWater();
+	public void DispenseWater();
 	// Breville Barista Express machine
 	
 	// grind size

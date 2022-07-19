@@ -1,18 +1,14 @@
 package app.com.basic;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-//import app.com.basic.PowerStatus.POWERSTATUS;
-import app.com.breville.Hopper;
-
+@Slf4j
 @Component
-public class BasicCoffeeMachine implements IBasicCoffeeMachine {
+public class BasicCoffeeMachine implements IBasicCoffeeMachinePower,IBasicCoffeeMachineWater {
 
-	private final static Logger log = LoggerFactory.getLogger(BasicCoffeeMachine.class);
-	
 	private PowerStatus powerStatus;
 
 	public BasicCoffeeMachine() {
@@ -26,10 +22,10 @@ public class BasicCoffeeMachine implements IBasicCoffeeMachine {
 
 	@Override
 	public void PowerOnOff() {
-		if (this.getPowerStatus() == powerStatus.OFF) {
-			setPowerStatus(powerStatus.ON);
+		if (this.getPowerStatus() == PowerStatus.OFF) {
+			setPowerStatus(PowerStatus.ON);
 		} else {
-			setPowerStatus(powerStatus.OFF);
+			setPowerStatus(PowerStatus.OFF);
 		}
 	}
 	
@@ -39,7 +35,7 @@ public class BasicCoffeeMachine implements IBasicCoffeeMachine {
 	}
 	
 	@Override
-	public void DispenseHotWater() {
+	public void DispenseWater() {
 		log.info("Dispense Hot Water");
 	}
 

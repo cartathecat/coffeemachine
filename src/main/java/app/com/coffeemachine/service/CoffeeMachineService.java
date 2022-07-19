@@ -1,31 +1,24 @@
 package app.com.coffeemachine.service;
 
-import app.com.coffeemachine.models.Status;
+import app.com.coffeemachine.entities.Status;
 import app.com.coffeemachine.repository.OnOffRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import app.com.basic.PowerStatus;
-//import app.com.basic.PowerStatus.POWERSTATUS;
 import app.com.breville.BrevilleBaristaExpress;
-import app.com.coffeemachine.entities.CoffeeMachineStatus;
-import app.com.coffeemachine.entities.GrindResponse;
+import app.com.coffeemachine.models.grindresponse.CoffeeMachineStatus;
+import app.com.coffeemachine.models.grindresponse.GrindResponse;
 import app.com.coffeemachine.storge.ObjectSerialDeSerial;
 import app.com.coffeemachine.kafka.*;
 
+@Slf4j
 @Service
 public class CoffeeMachineService {
 
-	private final static Logger log = LoggerFactory.getLogger(CoffeeMachineService.class);
-	
-	//@Autowired
-	//private AdminClient admin;
-	
 	@Autowired
 	private BrevilleBaristaExpress coffeeMachine;
 	
@@ -48,8 +41,6 @@ public class CoffeeMachineService {
 	/*
 	 * Switch ON / OFF a coffee machine
 	 */
-	
-	
 	public void PowerButton() {
 		log.info("PowerButton");
 		final String topicName = "onoffstatus";
@@ -63,7 +54,6 @@ public class CoffeeMachineService {
 		//} else {		
 		String msg = "{status:" + coffeeMachine.getPowerStatus().toString() + "}";
 		log.info("STATUS : " + msg);
-
 
 		producer.sendToKafka(topicName, msg);
 		//}

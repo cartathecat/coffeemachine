@@ -2,6 +2,7 @@ package app.com.coffeemachine.controller;
 
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import app.com.coffeemachine.service.CoffeeMachineService;
 
+@Slf4j
 @RestController
 @RequestMapping(path="coffeemachine/v1")
 public class BasicCoffeeMachineController {
 
-	private final static Logger log = LoggerFactory.getLogger(BasicCoffeeMachineController.class);
-	
 	@Autowired
 	private CoffeeMachineService coffeeMachineService;
 	
@@ -30,7 +30,8 @@ public class BasicCoffeeMachineController {
 		log.info("BasicCoffeeMachineController");
 	}
 	
-	@RequestMapping(method = RequestMethod.GET, value = "/onoff", produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(method = RequestMethod.GET, value = "/onoff",
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<?> onOff() {
 		this.coffeeMachineService.PowerButton();
 		return new ResponseEntity<>(coffeeMachineService.GetStatus(), HttpStatus.OK);

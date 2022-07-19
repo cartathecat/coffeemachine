@@ -1,4 +1,4 @@
-package app.com.coffeemachine.entities;
+package app.com.coffeemachine.models.grindresponse;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -10,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import app.com.breville.CoffeeMachineOperation;
 
-@EntityScan
 @JsonPropertyOrder({"status", "datetime", "location", "groundAmount"})
 public class GrindResponse {
 
@@ -41,6 +40,7 @@ public class GrindResponse {
 	public CoffeeMachineOperation getStatus() {
 		return this.status;
 	}
+
 	public void setMessage(CoffeeMachineOperation s) {
 		this.status = s;
 	}
@@ -48,6 +48,7 @@ public class GrindResponse {
 	public int getGroundAmount() {
 		return this.groundAmount;
 	}
+
 	public void setGroundAmount(int v) {
 		this.groundAmount = v;
 	}

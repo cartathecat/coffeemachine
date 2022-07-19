@@ -5,28 +5,25 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import app.com.basic.BasicCoffeeMachine;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
-import app.com.basic.BasicCoffeeMachine;
-import app.com.coffeemachine.entities.GrindResponse;
+import app.com.coffeemachine.models.grindresponse.GrindResponse;
 
+@Slf4j
 @Component
-public class BrevilleBaristaExpress extends BasicCoffeeMachine 
+public class BrevilleBaristaExpress extends BasicCoffeeMachine
 						implements IBrevilleBaristaExpress {
 
-	private final static Logger log = LoggerFactory.getLogger(BrevilleBaristaExpress.class);
-	
 	private final Map<UUID, GrindResponse> grindRequests = new HashMap<UUID, GrindResponse>();
 				
 	@Autowired
