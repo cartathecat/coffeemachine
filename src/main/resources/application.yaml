@@ -8,9 +8,22 @@ spring:
               jaas:
                   config: org.apache.kafka.common.security.plain.PlainLoginModule required username='${KAFKA_USER}' password='${KAFKA_PASS}';
           bootstrap:
-              servers: localhost:9092
+              servers: '${KAFKA_BOOTSTRAP_SERVERS}'
           security:
-              protocol: SASL_SSL        
+              protocol: SASL_SSL
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password: Passw0rd
+    driver-class-name: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  h2:
+    console:
+      enabled: true
+      path: /h2
 logging:
   level:
     org:

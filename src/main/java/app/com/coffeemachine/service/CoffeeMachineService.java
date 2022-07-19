@@ -1,27 +1,12 @@
 package app.com.coffeemachine.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.kafka.clients.admin.Admin;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.DescribeTopicsResult;
-import org.apache.kafka.clients.admin.ListTopicsResult;
-import org.apache.kafka.clients.admin.TopicDescription;
-import org.apache.kafka.common.errors.TimeoutException;
-import org.apache.kafka.common.errors.UnknownTopicOrPartitionException;
+import app.com.coffeemachine.models.Status;
+import app.com.coffeemachine.repository.OnOffRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -52,7 +37,10 @@ public class CoffeeMachineService {
 	
 	@Autowired
 	private Producer producer;
-	
+
+	@Autowired
+	private OnOffRepository repository;
+
 	public CoffeeMachineService() {
 		log.info("CoffeeMachineService");
 	}
@@ -64,18 +52,20 @@ public class CoffeeMachineService {
 	
 	public void PowerButton() {
 		log.info("PowerButton");
-		String topicName = "onoffstatus";
+		final String topicName = "onoffstatus";
 		
 		coffeeMachine.PowerOnOff();
 		coffeeMachine.setStopCoffeeGrinding(true);
-		
+
 	//	boolean topicExist = doesTopicExist(topicName);
 		//if (!topicExist) {
 		//	log.info("Topic '{}' does not exist, unable to send to kafka", topicName);
 		//} else {		
-			String msg = "{status:" + coffeeMachine.getPowerStatus().toString() + "}";
-			log.info("STATUS : " + msg);
-			producer.sendToKafka(topicName, msg);
+		String msg = "{status:" + coffeeMachine.getPowerStatus().toString() + "}";
+		log.info("STATUS : " + msg);
+
+
+		producer.sendToKafka(topicName, msg);
 		//}
 	}
 	
@@ -139,6 +129,12 @@ public class CoffeeMachineService {
 		status.setStatus(coffeeMachine.getPowerStatus());
 		status.setWaterLevel(coffeeMachine.WaterTank().getWaterLevel());
 		status.setBeanLevel(coffeeMachine.Hopper().getBeanAmount());
+
+		Status s = new Status();
+		s.setLocalDateTime(status.getDateTime());
+		s.setStatus(coffeeMachine.getPowerStatus().toString());
+		repository.save(s);
+
 		return status;
 	}
 	
@@ -150,8 +146,7 @@ public class CoffeeMachineService {
 		if (coffeeMachine.getPowerStatus() != PowerStatus.ON) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Coffee machine is not switched on");			
 		}
-		GrindResponse g = coffeeMachine.GrindDose();
-		return g;
+		return (coffeeMachine.GrindDose());
 	}
 	
 	public void FillHopper(int coffeeBeans) {
@@ -168,8 +163,7 @@ public class CoffeeMachineService {
 	}
 
 	public HttpHeaders GetIdentifier() {
-		HttpHeaders headers = coffeeMachine.GetIdentifier();
-		return headers;
+		return (coffeeMachine.GetIdentifier());
 	}
 
 
