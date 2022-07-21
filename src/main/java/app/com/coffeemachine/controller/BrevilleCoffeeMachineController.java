@@ -35,7 +35,7 @@ public class BrevilleCoffeeMachineController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, value = "/addcoffeebeans/{coffeeBeans}", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody ResponseEntity<?> addCoffeeBeans(@PathVariable int coffeeBeans) {
+	public @ResponseBody ResponseEntity<?> addCoffeeBeans(@PathVariable double coffeeBeans) {
 		this.coffeeMachineService.FillHopper(coffeeBeans);
 		return new ResponseEntity<>("addCoffeeBeans", HttpStatus.OK);
 		

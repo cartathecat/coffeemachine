@@ -3,6 +3,7 @@ package app.com.breville;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import app.com.coffeemachine.entities.JsonHopperCapacity;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,33 +15,43 @@ public class Hopper implements IHopper {
 
 	@Autowired
 	private GrindWheel grindWheel;
-	
+
+	private JsonHopperCapacity jsonHopperCapacity;
+
+	public void setJsonHopperCapacity(JsonHopperCapacity h) {
+		this.jsonHopperCapacity = h;
+	}
+
+	public JsonHopperCapacity getJsonHopperCapacity() {
+		return this.jsonHopperCapacity;
+	}
+
 	// amount in grams
 	//static final int HOPPERCAPACITY = 250;
-	private int hopperCapacity = 250;
-	private double beanAmount;
+	//private int hopperCapacity = 250;
+	//private double beanAmount;
 
 	public Hopper() {
 		log.info("Hopper");
-		setBeanAmount(0.0);
+	//	setBeanAmount(0.0);
 	}
 
-	public int getHopperCapacity() {
-		return this.hopperCapacity;
+	public double getHopperCapacity() {
+		return this.jsonHopperCapacity.getHopperCapacity();
 	}
-	private void setHopperCapacity(int c) {
-		this.hopperCapacity = c;
+	private void setHopperCapacity(double c) {
+		this.jsonHopperCapacity.setHopperCapacity(c);
 	}
-	 
 	
 	public double getBeanAmount() {
-		return this.beanAmount;
+		return this.jsonHopperCapacity.getBeanAmount();
 	}
+
 	private void setBeanAmount(double v) {
-		if (this.beanAmount + v > hopperCapacity) {
-			this.beanAmount = hopperCapacity;
+		if (this.jsonHopperCapacity.getBeanAmount() + v > this.jsonHopperCapacity.getHopperCapacity()) {
+			this.jsonHopperCapacity.setBeanAmount(this.jsonHopperCapacity.getHopperCapacity());
 		} else {
-			this.beanAmount += v;
+			this.jsonHopperCapacity.setBeanAmount(this.jsonHopperCapacity.getBeanAmount() + v);
 		}
 	}	
 	

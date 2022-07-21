@@ -34,14 +34,14 @@ public class BasicCoffeeMachineController {
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<?> onOff() {
 		this.coffeeMachineService.PowerButton();
-		return new ResponseEntity<>(coffeeMachineService.GetStatus(), HttpStatus.OK);
+		return new ResponseEntity<>(this.coffeeMachineService.GetStatus(), HttpStatus.OK);
 		
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/status", 
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody ResponseEntity<?> status() {
-		return new ResponseEntity<>(coffeeMachineService.GetStatus(), HttpStatus.OK);
+		return new ResponseEntity<>(this.coffeeMachineService.GetStatus(), HttpStatus.OK);
 		
 	}
 	

@@ -2,6 +2,9 @@ package app.com.coffeemachine.storge;
 
 import java.io.File;
 
+import app.com.coffeemachine.entities.JsonHopperCapacity;
+import app.com.coffeemachine.entities.JsonWaterTank;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +16,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import app.com.breville.Hopper;
 import app.com.breville.WaterTank;
 
-public class ObjectSerialDeSerial {
+@Slf4j
+public class ObjectSerialDeSerial implements IObjectSerialDeSerial {
 
-	private final static Logger log = LoggerFactory.getLogger(ObjectSerialDeSerial.class);
-	
-	//@Autowired
-	//public WaterTank waterTank;
-	
 	public ObjectSerialDeSerial() {
 		log.info("ObjectSerialDeSerial");
 	}
@@ -30,15 +29,17 @@ public class ObjectSerialDeSerial {
 		
 		String clsName = o.getClass().getSimpleName();
 		switch (clsName) {
-		case "WaterTank":
+		case "JsonWaterTank":
 			log.info("Serialize Water Tanker object");
 			fileName = "data/watertank.json";
-			log.info("Tank " + ((WaterTank) o).getWaterLevel());
+			log.info("Tank " + ((JsonWaterTank) o).getCAPACITY());
+			log.info("Tank " + ((JsonWaterTank) o).getWaterLevel());
+
 			break;
-		case "Hopper":
+		case "JsonHopperCapacity":
 			log.info("Serialize Hopper object");
 			fileName = "data/hopper.json";
-			log.info("Hopper " + ((Hopper) o).getBeanAmount());
+			log.info("Hopper " + ((JsonHopperCapacity) o).getBeanAmount());
 			break;
 			
 		default:
@@ -49,15 +50,15 @@ public class ObjectSerialDeSerial {
 		try {
 			classFile = new ClassPathResource(fileName).getFile();
 			ObjectMapper objectMapper = new ObjectMapper();
-			if (o.getClass() == WaterTank.class) {
-				objectMapper.writeValue(classFile, (WaterTank)o);
+			if (o.getClass() == JsonWaterTank.class) {
+				objectMapper.writeValue(classFile, (JsonWaterTank)o);
 			}
-			if (o.getClass() == Hopper.class) {
-				objectMapper.writeValue(classFile, (Hopper)o);
+			if (o.getClass() == JsonHopperCapacity.class) {
+				objectMapper.writeValue(classFile, (JsonHopperCapacity)o);
 			}
 			
 		} catch (Exception e) {
-			System.out.println("Error serialising :" + fileName);
+			log.error("Error serialising : {s}", e.getMessage());
 		}
 		
 	}
@@ -67,11 +68,11 @@ public class ObjectSerialDeSerial {
 	
 		String clsName = clazz.getSimpleName();
 		switch (clsName) {
-		case "WaterTank":
+		case "JsonWaterTank":
 			log.info("DeSerialize Water Tanker object");
 			fileName = "data/watertank.json";
 			break;
-		case "Hopper":
+		case "JsonHopperCapacity":
 			log.info("DeSerialize Hopper object");
 			fileName = "data/hopper.json";
 			break;
@@ -80,21 +81,23 @@ public class ObjectSerialDeSerial {
 			break;
 		}
 
+		if (fileName.isEmpty()) {
+			throw new IllegalArgumentException("clsName not set");
+		}
 		File classFile = null;
 		Object o = null;
 		try {
 			classFile = new ClassPathResource(fileName).getFile();
 			ObjectMapper objectMapper = new ObjectMapper();
-			if (clazz == WaterTank.class) {
-				o = (WaterTank) objectMapper.readValue(classFile, clazz);
+			if (clazz == JsonWaterTank.class) {
+				o = (JsonWaterTank) objectMapper.readValue(classFile, clazz);
 			}
-			if (clazz == Hopper.class) {
-				o = (Hopper) objectMapper.readValue(classFile, clazz);
+			if (clazz == JsonHopperCapacity.class) {
+				o = (JsonHopperCapacity) objectMapper.readValue(classFile, clazz);
 			}
 
 		} catch (Exception e) {
-			
-			System.out.println("Error deserialzing :" + clsName);
+			log.warn("Deserialing : {}",e.getMessage() );
 		}
 		
 		return o;

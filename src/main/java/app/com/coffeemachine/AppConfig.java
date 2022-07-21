@@ -1,5 +1,7 @@
 package app.com.coffeemachine;
 
+import app.com.coffeemachine.entities.JsonHopperCapacity;
+import app.com.coffeemachine.entities.JsonWaterTank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -42,31 +44,47 @@ public class AppConfig {
 		return new DoseWheel();
 	}
 	
-	@Bean
+	@Bean("objectSerialDeSerial")
 	public ObjectSerialDeSerial objectSerialDeSerial() {
 		return new ObjectSerialDeSerial();
 	}
 
+	//@Bean("jsonWaterTank")
+	//public JsonWaterTank jsonWaterTank() {
+	//	return new JsonWaterTank();
+	//}
+
 	@Bean
-	@DependsOn("objectSerialDeSerial")
+	@DependsOn({"objectSerialDeSerial"})
 	public WaterTank waterTank() {
-		WaterTank w = (WaterTank) objectSerialDeSerial().deSerialize(WaterTank.class);
-		if (w != null) {
+		WaterTank w = new WaterTank();
+		JsonWaterTank jw = (JsonWaterTank) objectSerialDeSerial().deSerialize(JsonWaterTank.class);
+
+//		if (jw != null) {
+//			return null;
+//		} else {
+			if (jw != null) {
+				w.setJsonWaterTank(jw);
+			}
+			//return new WaterTank();
 			return w;
-		} else {
-			return new WaterTank();
-		}
+//		}
 	}
 	
 	@Bean
 	@DependsOn("objectSerialDeSerial")
 	public Hopper hopper() {
-		Hopper h = (Hopper) objectSerialDeSerial().deSerialize(Hopper.class);
-		if (h != null) {
-			return h;
-		} else {
-			return new Hopper();
+		Hopper h = new Hopper();
+		JsonHopperCapacity hc = (JsonHopperCapacity) objectSerialDeSerial().deSerialize(JsonHopperCapacity.class);
+		//if (h != null) {
+		//	return h;
+		//} else {
+		//	return new Hopper();
+		//}
+		if (hc != null) {
+			h.setJsonHopperCapacity(hc);
 		}
+		return h;
 	}
 	
 	@Bean

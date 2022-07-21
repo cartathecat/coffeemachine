@@ -67,7 +67,9 @@ public class BrevilleBaristaExpress extends BasicCoffeeMachine
 	public GrindResponse GrindDose() {
 		log.info("Grind dose");
 		log.info("Water Level  : {} m/l" , this.waterTank.getWaterLevel());
-		log.info("Hopper Level : {} grams", new BigDecimal(this.hopper.getBeanAmount()).setScale(2, RoundingMode.HALF_DOWN));
+		log.info("Hopper Level : {} grams", new BigDecimal(this.hopper
+				.getBeanAmount())
+				.setScale(2, RoundingMode.HALF_DOWN));
 		log.info("Grind Wheel  : {}" , this.grindWheel.getGrindValue());
 		log.info("Dose Wheel   : {}" , this.doseWheel.getDoseValue());
 		

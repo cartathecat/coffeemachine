@@ -1,37 +1,32 @@
 package app.com.breville;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.annotation.Resource;
-
+import app.com.coffeemachine.entities.JsonWaterTank;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 public class WaterTank implements IWaterTank {
 
-	@JsonProperty("capacity")
-	private int CAPACITY = 2000;
-	@JsonProperty("waterLevel")
-	private int waterLevel;
-	
+	//@Autowired
+	public JsonWaterTank jsonWaterTank;
+
+	public void setJsonWaterTank(JsonWaterTank w) {
+		this.jsonWaterTank = w;
+	}
+	public JsonWaterTank getJsonWaterTank() {
+		return this.jsonWaterTank;
+	}
+
 	public WaterTank() {
 		log.info("WaterTank");
-		this.waterLevel = 0;		
 	}
 	
 	@Override
 	public void fillWaterTank(int w) {
 		log.info("Fill water tank");
-		this.waterLevel += w;
+	//	this.waterLevel += w;
+		this.jsonWaterTank.setWaterLevel(this.jsonWaterTank.getWaterLevel() + w);
 	}
 
 	@Override
@@ -41,24 +36,32 @@ public class WaterTank implements IWaterTank {
 
 	public int getCapacity() {
 		log.info("Get Capacity Level");
-		return this.CAPACITY;
+	//	return this.CAPACITY;
+		return this.jsonWaterTank.getCAPACITY();
 	}
 	private void setCapacity(int c) {
-		this.CAPACITY = c;
+
+	//	this.CAPACITY = c;
+		this.jsonWaterTank.setCAPACITY(c);
 	}
 	
 	@Override
 	public int getWaterLevel() {
 		log.info("Get Water Level");
-		return this.waterLevel;
+	//	return this.waterLevel;
+		return this.jsonWaterTank.getWaterLevel();
 	}
 	private void setWaterLevel(int w) {
-		this.waterLevel = w;
+	//	this.waterLevel = w;
+		this.jsonWaterTank.setWaterLevel(w);
 	}
 	
 	@Override
 	public String toString() {
-		return String.format("WaterTank [Capacity=%s, level=%s]", CAPACITY, this.waterLevel);
+
+		return String.format("WaterTank [Capacity=%s, level=%s]",
+				this.jsonWaterTank.getCAPACITY(),
+				this.jsonWaterTank.getWaterLevel());
 	}
 	
 }

@@ -1,28 +1,30 @@
 package app.com.coffeemachine.entities;
 
-import javax.persistence.*;
+//import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name="onoff")
 public class Status {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
-    @Column(name="localdatetime")
     private LocalDateTime localDateTime;
-    @Column(name="status")
     private String status;
 
-    public Status() {
-        this.localDateTime = LocalDateTime.now();
+    public Status(long id, LocalDateTime d, String status) {
+        this.Id = id;
+        this.localDateTime = d;
+        this.status = status;
     }
 
     public Status(String status) {
         this.localDateTime = LocalDateTime.now();
         this.status = status;
     }
+
+    public Status() {
+        this.localDateTime = LocalDateTime.now();
+    }
+
 
     public long getId() {
         return this.Id;

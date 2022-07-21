@@ -1,19 +1,24 @@
 package app.com.coffeemachine.service;
 
-import app.com.coffeemachine.entities.Status;
-import app.com.coffeemachine.repository.OnOffRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 import app.com.basic.PowerStatus;
 import app.com.breville.BrevilleBaristaExpress;
+import app.com.coffeemachine.entities.Status;
+import app.com.coffeemachine.kafka.Producer;
 import app.com.coffeemachine.models.grindresponse.CoffeeMachineStatus;
 import app.com.coffeemachine.models.grindresponse.GrindResponse;
+//import app.com.coffeemachine.repositories.status.StoreStatus;
 import app.com.coffeemachine.storge.ObjectSerialDeSerial;
-import app.com.coffeemachine.kafka.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Collections;
 
 @Slf4j
 @Service
@@ -23,7 +28,7 @@ public class CoffeeMachineService {
 	private BrevilleBaristaExpress coffeeMachine;
 	
 	@Autowired
-	private CoffeeMachineStatus status;
+	private CoffeeMachineStatus coffeeMachineStatus;
 	
 	@Autowired
 	private ObjectSerialDeSerial objectSerialDeSerial;
@@ -31,8 +36,8 @@ public class CoffeeMachineService {
 	@Autowired
 	private Producer producer;
 
-	@Autowired
-	private OnOffRepository repository;
+//	@Autowired
+//	private StoreStatus storeStatus;
 
 	public CoffeeMachineService() {
 		log.info("CoffeeMachineService");
@@ -114,18 +119,53 @@ public class CoffeeMachineService {
 	/*
 	 * Return the power status of a coffee machine
 	 */
-	public CoffeeMachineStatus GetStatus() {
+	public CoffeeMachineStatus GetStatus()
+	{
 	//	CoffeeMachineStatus status = new CoffeeMachineStatus();
-		status.setStatus(coffeeMachine.getPowerStatus());
-		status.setWaterLevel(coffeeMachine.WaterTank().getWaterLevel());
-		status.setBeanLevel(coffeeMachine.Hopper().getBeanAmount());
+		coffeeMachineStatus.setStatus(coffeeMachine.getPowerStatus());
+		coffeeMachineStatus.setWaterLevel(coffeeMachine.WaterTank().getWaterLevel());
+		coffeeMachineStatus.setBeanLevel(coffeeMachine.Hopper().getBeanAmount());
 
 		Status s = new Status();
-		s.setLocalDateTime(status.getDateTime());
-		s.setStatus(coffeeMachine.getPowerStatus().toString());
-		repository.save(s);
+		s.setId(1);
+		s.setStatus("ON");
+		System.out.println("Status " + s.toString());
 
-		return status;
+		System.out.println("Calling endpoint ...");
+		String uri = "https://d130de26-e070-47d0-81cf-9d92f12536f7.mock.pstmn.io/db/v1/status";
+		RestTemplate restTemplate = new RestTemplate();
+		//HttpHeaders headers = new HttpHeaders();
+		//headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+		ResponseEntity<String> resp = restTemplate.getForEntity(uri, String.class);
+
+
+		//String resp = restTemplate.getForObject(uri, String.class);
+		//ResponseEntity<Status> resp = restTemplate.getForEntity(uri, Status.class);
+
+		System.out.println("Response :" + resp.toString());
+		ObjectMapper mapper = new ObjectMapper();
+		JsonNode root = null;
+		try {
+			root = mapper.readTree(resp.getBody());
+		} catch (JsonProcessingException e) {
+			throw new RuntimeException(e);
+		}
+		System.out.println("JsonNode :" + root.toString());
+
+		Status jsonStatus = restTemplate.getForObject(uri, Status.class);
+		System.out.println("Status :" + jsonStatus.toString());
+
+
+
+		/*
+		Status s = new Status();
+		s.setLocalDateTime(coffeeMachineStatus.getDateTime());		// Get the timestamp from the coffeemachinestatus object
+		s.setStatus(coffeeMachine.getPowerStatus().toString());		// Get the power status from the coffeemachine
+		storeStatus.StoreStatus(s);	// Store the data if connected to a database
+		*/
+
+		return coffeeMachineStatus;
 	}
 	
 	/*
@@ -139,17 +179,16 @@ public class CoffeeMachineService {
 		return (coffeeMachine.GrindDose());
 	}
 	
-	public void FillHopper(int coffeeBeans) {
+	public void FillHopper(double coffeeBeans) {
 		log.info("Fill bean hopper");
 		coffeeMachine.Hopper().FillHopper(coffeeBeans);
-		objectSerialDeSerial.serialize(coffeeMachine.Hopper());
-
+		objectSerialDeSerial.serialize(coffeeMachine.Hopper().getJsonHopperCapacity());
 	}
 
 	public void FillWaterTank(int water) {
 		log.info("Fill water tank");
 		coffeeMachine.WaterTank().fillWaterTank(water);
-		objectSerialDeSerial.serialize(coffeeMachine.WaterTank());
+		objectSerialDeSerial.serialize(coffeeMachine.WaterTank().getJsonWaterTank());
 	}
 
 	public HttpHeaders GetIdentifier() {
